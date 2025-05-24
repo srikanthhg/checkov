@@ -9,7 +9,7 @@ pipeline {
     parameters {
         // choice(name: 'CHOICES', choices: ['apply', 'destroy' ], description: '')
 
-        booleanParam(name: 'terraform_apply', defaultValue: true, description: 'Toggle this value')
+        // booleanParam(name: 'terraform_apply', defaultValue: true, description: 'Toggle this value')
 
         choice(name: 'CHOICE', choices: ['apply', 'destroy' ], description: 'pick terraform apply or terraform destroy')
     }
@@ -38,7 +38,7 @@ pipeline {
         stage('Lint') {
             steps {
                 // Run Terraform fmt to check formatting
-                sh 'terraform fmt -check'
+                sh 'terraform fmt -recursive'
                 // Run Terraform validate to check for syntax errors
                 sh 'terraform validate'
             }
