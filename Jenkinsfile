@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        terraform 'Terraform'
+        terraform 'terraform'
     }
 
     parameters {
@@ -25,7 +25,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                "${params.CHOICES}" == 'destroy'
+                ${params.CHOICES} == 'destroy'
                 sh "terraform init"
                 sh "terraform fmt"
                 sh "terraform validate"
