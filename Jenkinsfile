@@ -48,7 +48,7 @@ pipeline {
                 expression { params.CHOICE == 'apply' }
             }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'aws_cred', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh 'terraform plan -out=tfplan'
                     sh 'terraform apply -auto-approve tfplan'
                 }
@@ -60,7 +60,7 @@ pipeline {
             }
             steps {
 
-                withCredentials([usernamePassword(credentialsId: 'aws_cred', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh 'terraform plan -out=tfplan'
                     sh 'terraform destroy -auto-approve tfplan'
                 }
