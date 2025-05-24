@@ -1,3 +1,4 @@
+#// plugins installed: pipeline stage view, docker, terraform, aws 
 pipeline {
     agent any
     tools {
