@@ -7,7 +7,7 @@ pipeline {
     parameters {
         // choice(name: 'CHOICES', choices: ['apply', 'destroy' ], description: '')
 
-        booleanParam(name: 'terraform apply', defaultValue: true, description: 'Toggle this value')
+        booleanParam(name: 'terraform_apply', defaultValue: true, description: 'Toggle this value')
 
         choice(name: 'CHOICE', choices: ['apply', 'destroy' ], description: 'pick terraform apply or terraform destroy')
     }
