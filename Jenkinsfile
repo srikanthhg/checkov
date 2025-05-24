@@ -20,7 +20,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    docker.image('bridgecrew/checkov:latest').inside {
+                    docker.image('bridgecrew/checkov:latest').inside("--entrypoint=''") {
                         // Run Checkov to scan the code
                         sh 'checkov -d .'
                     }
