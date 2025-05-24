@@ -1,23 +1,33 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(name: 'CHOICES', choices: ['apply', 'destroy' ], description: '')
+    }
     stages {
         stage('checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/bridgecrewio/terragoat'
-                stash includes: '**/*', name: 'terragoat'
+                git branch: 'main', url: 'https://github.com/srikanthhg/checkov.git'
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing...'
-                // Add your test commands here
+                script {
+                    docker.image('bridgecrew/checkov:latest').inside {
+                        // Run Checkov to scan the code
+                        sh 'checkov -d .'
+                    }
+                }
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying...'
-                // Add your deployment commands here
+                "${params.CHOICES}" == 'destroy' ? sh 'terraform destroy -auto-approve' : sh 'terraform apply -auto-approve'
+                sh "terraform init"
+                sh "terraform fmt"
+                sh "terraform validate"
+                sh "terraform plan -out=tfplan"
+                sh "terraform apply -auto-approve tfplan"
             }
         }
     }
