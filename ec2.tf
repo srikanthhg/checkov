@@ -4,13 +4,13 @@ resource "aws_instance" "bootstrap" {
   associate_public_ip_address = false
   instance_type               = "t2.micro"
   key_name                    = "hipstershop"
-  iam_instance_profile = "myrole08022024"
+  iam_instance_profile        = "myrole08022024"
 
   metadata_options {
     http_endpoint = "enabled"
     http_tokens   = "required"
   }
-  monitoring = true
+  monitoring    = true
   ebs_optimized = true
   root_block_device {
     encrypted = true
