@@ -2,6 +2,7 @@ pipeline {
     agent any
     tools {
         terraform 'terraform'
+        docker 'docker'
     }
 
     parameters {
