@@ -61,8 +61,7 @@ pipeline {
             steps {
 
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                    sh 'terraform plan -out=tfplan'
-                    sh 'terraform destroy -auto-approve tfplan'
+                    sh 'terraform destroy -auto-approve'
                 }
             }
         }
@@ -73,10 +72,84 @@ pipeline {
             echo 'This will always run after the pipeline completes.'
         }
         success {
-            echo 'This will run only if the pipeline succeeds.'
+            echo 'message: "✅ Pipeline succeeded"'
         }
         failure {
-            echo 'This will run only if the pipeline fails.'
+            echo 'message: "❌ Pipeline failed.'
         }
     }
 }
+
+
+
+// pipeline {
+//     agent any
+
+//     environment {
+//         TF_VAR_region = 'us-east-1'
+//     }
+
+//     stages {
+//         stage('Checkout') {
+//             steps {
+//                 git 'https://github.com/srikanthhg/checkov.git'
+//             }
+//         }
+
+//         stage('Terraform Lint') {
+//             steps {
+//                 sh 'terraform fmt -check || true'
+//                 sh 'terraform validate'
+//                 sh 'tflint || true'
+//             }
+//         }
+
+//         stage('Security Scan - Checkov') {
+//             steps {
+//                 docker.image('bridgecrew/checkov:latest').inside {
+//                     sh 'checkov -d .'
+//                 }
+//             }
+//         }
+
+//         stage('Terraform Init & Plan') {
+//             steps {
+//                 sh 'terraform init'
+//                 sh 'terraform plan -out=tfplan'
+//             }
+//         }
+
+//         stage('Manual Approval') {
+//             when {
+//                 branch 'main'
+//             }
+//             steps {
+//                 input message: "Deploy to Production?"
+//             }
+//         }
+
+//         stage('Terraform Apply') {
+//             when {
+//                 branch 'main'
+//             }
+//             steps {
+//                 sh 'terraform apply -auto-approve tfplan'
+//             }
+//         }
+
+//         stage('Post Actions') {
+//             steps {
+//                 echo "Pipeline completed."
+//             }
+//         }
+//     }
+
+//     post {
+//         always {
+//             echo "This runs always"
+//         }
+//         failure {
+//             echo "Pipeline failed!"
+//         }
+//     }
+// }
