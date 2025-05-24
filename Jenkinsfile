@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        terraform 'Terraform'
+    }
 
     parameters {
         choice(name: 'CHOICES', choices: ['apply', 'destroy' ], description: '')
@@ -22,7 +25,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                "${params.CHOICES}" == 'destroy' ? sh 'terraform destroy -auto-approve' : sh 'terraform apply -auto-approve'
+                "${params.CHOICES}" == 'destroy'
                 sh "terraform init"
                 sh "terraform fmt"
                 sh "terraform validate"
