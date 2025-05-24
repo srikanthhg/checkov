@@ -29,23 +29,40 @@ pipeline {
                 }
             }
         }
-        
-        stage('Example') {
-            steps {
-                echo "Toggle: ${params.TOGGLE}"
-                echo "Choice: ${params.CHOICE}"
-            }
-        }
-
-
-        stage('Deploy') {
+        stage('init') {
             steps {
                 // ${params.CHOICES} == 'destroy'
                 sh "terraform init"
-                sh "terraform fmt"
-                sh "terraform validate"
-                sh "terraform plan -out=tfplan"
-                sh "terraform apply -auto-approve tfplan"
+            }
+        }
+        stage('Lint') {
+            steps {
+                // Run Terraform fmt to check formatting
+                sh 'terraform fmt -check'
+                // Run Terraform validate to check for syntax errors
+                sh 'terraform validate'
+            }
+        }
+        stage('Apply') {
+            when {
+                expression { params.CHOICE == 'apply' }
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'aws_cred', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh 'terraform plan -out=tfplan'
+                    sh 'terraform apply -auto-approve tfplan'
+            }
+        }
+        stage('Destroy') {
+            when {
+                expression { params.CHOICE == 'destroy' }
+            }
+            steps {
+
+                withCredentials([usernamePassword(credentialsId: 'aws_cred', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh 'terraform plan -out=tfplan'
+                    sh 'terraform destroy -auto-approve tfplan'
+
             }
         }
     }
