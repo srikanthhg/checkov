@@ -1,7 +1,7 @@
 resource "aws_instance" "bootstrap" {
   ami                         = data.aws_ami.ubuntu.id
   subnet_id                   = "subnet-0f219f655b0b7fc30"
-    #checkov:skip=CKV_AWS_20:This is a jumpserver so it is required to have a public IP
+    #checkov:skip=CKV_AWS_88:This is a jumpserver so it is required to have a public IP
   associate_public_ip_address = true
   instance_type               = "t2.micro"
   key_name                    = "hipstershop"
