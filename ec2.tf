@@ -7,15 +7,15 @@ resource "aws_instance" "bootstrap" {
   key_name                    = "hipstershop"
   iam_instance_profile        = "myrole08022024"
 
-  metadata_options {
-    http_endpoint = "enabled"
-    http_tokens   = "required"
-  }
-  monitoring    = true
-  ebs_optimized = true
-  root_block_device {
-    encrypted = true
-  }
+  # metadata_options {
+  #   http_endpoint = "enabled"
+  #   http_tokens   = "required"
+  # }
+  # monitoring    = true
+  # ebs_optimized = true
+  # root_block_device {
+  #   encrypted = true
+  # }
   ebs_block_device {
     device_name = "/dev/sda1"
     volume_size = 30
